@@ -1718,7 +1718,7 @@ def test_status_text_renders_release_line(capsys) -> None:
     }
     status_text(rows, ci)
     out = capsys.readouterr().out
-    assert "release v1.2.3 · 7 since" in out
+    assert "release 7 since" in out
     assert "release unavailable" in out
     assert "up to date" not in out
     assert "acme/current" not in out

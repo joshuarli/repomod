@@ -164,9 +164,9 @@ def _workflow_label(state: str) -> str:
 
 
 def _local_color(value: str, stale: bool = False) -> str:
-    if value.startswith(("missing", "invalid")) or stale:
+    if value.startswith(("missing", "invalid", "dirty")) or stale:
         return "31"
-    if value.startswith(("dirty", "diverged", "ahead", "behind", "detached")):
+    if value.startswith(("diverged", "ahead", "behind", "detached")):
         return "33"
     return "32"
 
@@ -289,7 +289,6 @@ def _release_row(release: github.ReleaseStatus | None) -> dict[str, object] | No
 
 
 def _release_label(release: dict[str, Any]) -> tuple[str, str]:
-    tag = release.get("tag")
     state = release.get("state")
     cached = release.get("cached") is True and isinstance(release.get("age_seconds"), int)
     suffix = f" (cached {release['age_seconds']}s)" if cached else ""
@@ -297,18 +296,15 @@ def _release_label(release: dict[str, Any]) -> tuple[str, str]:
         return f"unavailable{suffix}", "33"
     if state == "no-releases":
         return f"no releases{suffix}", "33"
-    if not isinstance(tag, str) or not tag:
-        return f"unavailable{suffix}", "33"
-    name = f"{tag} (prerelease)" if release.get("prerelease") is True else tag
     commits = release.get("commits_since")
     count = commits if isinstance(commits, int) and not isinstance(commits, bool) else None
     if state == "up-to-date":
-        return f"{name} · up to date{suffix}", "32"
+        return f"up to date{suffix}", "32"
     if state == "diverged" and count is not None:
-        return f"{name} · {count} since (diverged){suffix}", "33"
+        return f"{count} since (diverged){suffix}", "33"
     if count is not None:
-        return f"{name} · {count} since{suffix}", "33"
-    return f"{name} {state}{suffix}", "33"
+        return f"{count} since{suffix}", "33"
+    return f"{state}{suffix}", "33"
 
 
 def _release_surfaced(row: dict[str, object]) -> bool:
