@@ -1,5 +1,7 @@
 # repomod
 
+> **Moved.** repomod now lives in [`repomod/` in joshuarli/stuff](https://github.com/joshuarli/stuff/tree/main/repomod), with its full history. This repository is archived.
+
 repomod checks repository policy across the `catalog.toml` fleet and opens pull requests for safe fixes.
 
 ## Get started
